@@ -1,15 +1,44 @@
-# Terraform Cloud Getting Started Guide Example
+# Creating Compute Instances using fixed shape
 
-This is an example Terraform configuration intended for use with the [Terraform Cloud Getting Started Guide](https://learn.hashicorp.com/terraform/cloud-gettingstarted/tfc_overview).
+This example illustrates how to use this module to creates compute instances using Fixed Shape with all the related networking, and optionally provision and attach a block volume to the created instances.
 
-## What will this do?
+Two compute-instance modules will be configured:
 
-This is a Terraform configuration that will create an EC2 instance in your AWS account. 
+- the first module will create 1 instance (shape VM.Standard2.1) with 1 Block Volume (50GB) attached to it
+- the second module will create 1 instances (shape VM.Standard2.1) with no additional Block Volume
 
-When you set up a Workspace on Terraform Cloud, you can link to this repository. Terraform Cloud can then run `terraform plan` and `terraform apply` automatically when changes are pushed. For more information on how Terraform Cloud interacts with Version Control Systems, see [our VCS documentation](https://www.terraform.io/docs/cloud/run/ui.html).
+Networking to house theses instances will also be created:
 
-## What are the prerequisites?
+- one VCN using the [VCN module](https://registry.terraform.io/modules/oracle-terraform-modules/vcn/oci/latest) from Terraform Registry
+- one subnet
+- on Network Security Group
 
-You must have an AWS account and provide your AWS Access Key ID and AWS Secret Access Key to Terraform Cloud. Terraform Cloud encrypts and stores variables using [Vault](https://www.vaultproject.io/). For more information on how to store variables in Terraform Cloud, see [our variable documentation](https://www.terraform.io/docs/cloud/workspaces/variables.html).
+## Prerequisites
 
-The values for `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` should be saved as environment variables on your workspace.
+You will need to collect the following information before you start:
+
+1. your OCI provider authentication values
+2. a compartment OCID in which the instances will be created
+3. a source OCID to deploy the instance, usually an image ocid from [OCI Platform Images list]
+4. a subnet OCID to which the instance's primary VNICs will be attached
+
+For detailed instructions, see [docs/prerequisites.adoc]
+
+## Using this example with Terraform cli
+
+Prepare one [Terraform Variable Definition file] named `terraform.tfvars` with the required authentication information.
+
+*TIP: You can rename and configure `terraform.tfvars.example` from this example's folder.*
+
+Then apply the example using the following commands:
+
+```shell
+> terraform init
+> terraform plan
+> terraform apply
+```
+
+[Terraform Variable Definition file]:https://www.terraform.io/docs/language/values/variables.html#variable-definitions-tfvars-files
+[docs/prerequisites.adoc]:https://github.com/oracle-terraform-modules/terraform-oci-compute-instance/blob/main/docs/prerequisites.adoc
+[Provisioning Infrastructure with Terraform]:https://www.terraform.io/docs/cli/run/index.html
+[OCI Platform Images list]:https://docs.oracle.com/en-us/iaas/images/
